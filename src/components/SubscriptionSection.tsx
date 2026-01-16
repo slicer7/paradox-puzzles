@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Gift, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const benefits = [
   "A brand new puzzle box delivered monthly",
@@ -11,6 +12,8 @@ const benefits = [
 ];
 
 export const SubscriptionSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section id="subscription" className="py-24 relative overflow-hidden">
       {/* Background */}
@@ -97,13 +100,10 @@ export const SubscriptionSection = () => {
                 <Button 
                   size="lg" 
                   className="w-full md:w-auto bg-primary text-primary-foreground hover:bg-gold-light font-display text-lg px-10 py-6 glow-gold"
+                  onClick={() => navigate('/product/the-paradox-club-monthly-subscription')}
                 >
                   Join The Paradox Club
                 </Button>
-
-                <p className="font-body text-sm text-muted-foreground">
-                  Subscription coming soon. Check back for updates!
-                </p>
               </div>
             </div>
           </motion.div>
