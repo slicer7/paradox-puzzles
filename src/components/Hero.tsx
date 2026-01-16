@@ -38,7 +38,7 @@ export const Hero = () => {
           <img 
             src={paradoxLogo} 
             alt="Paradox Puzzles" 
-            className="h-32 md:h-44 lg:h-56 w-auto mb-6 mx-auto"
+            className="h-48 md:h-64 lg:h-80 w-auto mb-6 mx-auto"
           />
           
           <motion.p initial={{
