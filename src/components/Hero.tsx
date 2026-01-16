@@ -77,7 +77,7 @@ export const Hero = () => {
       }} transition={{
         delay: 1.2,
         duration: 0.6
-      }} className="absolute bottom-10 left-1/2 -translate-x-1/2">
+      }} className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex justify-center">
           <motion.div animate={{
           y: [0, 8, 0]
         }} transition={{
