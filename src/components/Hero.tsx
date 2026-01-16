@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import heroPuzzle from "@/assets/hero-puzzle.jpg";
+import paradoxLogo from "@/assets/paradox-logo.png";
+
 export const Hero = () => {
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -34,9 +36,11 @@ export const Hero = () => {
             Unlock the Mystery
           </motion.p>
           
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-gradient-gold leading-tight">
-            Paradox Puzzles
-          </h1>
+          <img 
+            src={paradoxLogo} 
+            alt="Paradox Puzzles" 
+            className="h-32 md:h-44 lg:h-56 w-auto mx-auto mb-6"
+          />
           
           <motion.p initial={{
           opacity: 0
