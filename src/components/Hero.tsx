@@ -9,6 +9,7 @@ export const Hero = () => {
       <div className="absolute inset-0">
         <img src={heroPuzzle} alt="Mysterious puzzle box with golden light" className="w-full h-full object-cover opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+        <div className="absolute inset-0 geometric-pattern" />
       </div>
 
       {/* Content */}
