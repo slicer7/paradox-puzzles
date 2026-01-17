@@ -18,7 +18,6 @@ export const SubscriptionSection = () => {
     <section id="subscription" className="py-24 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background" />
-      <div className="absolute inset-0 geometric-pattern opacity-50" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
