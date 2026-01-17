@@ -69,25 +69,6 @@ export const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div initial={{
-        opacity: 0
-      }} animate={{
-        opacity: 1
-      }} transition={{
-        delay: 1.2,
-        duration: 0.6
-      }} className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex justify-center">
-          <motion.div animate={{
-          y: [0, 8, 0]
-        }} transition={{
-          repeat: Infinity,
-          duration: 1.5,
-          ease: "easeInOut"
-        }}>
-            <ArrowDown className="w-6 h-6 text-primary" />
-          </motion.div>
-        </motion.div>
       </div>
     </section>;
 };
