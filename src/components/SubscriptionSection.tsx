@@ -84,7 +84,7 @@ export const SubscriptionSection = () => {
 
                 <div className="space-y-2">
                   <div className="flex items-baseline gap-2 justify-center md:justify-start">
-                    <span className="font-display text-5xl font-bold text-gradient-gold">$49</span>
+                    <span className="font-display text-5xl font-bold text-gradient-gold">$19.99</span>
                     <span className="font-body text-muted-foreground">/month</span>
                   </div>
                   <p className="font-body text-muted-foreground">
