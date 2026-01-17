@@ -1,31 +1,16 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { ArrowDown } from "lucide-react";
 import heroPuzzle from "@/assets/hero-puzzle.jpg";
 import paradoxLogo from "@/assets/paradox-logo.png";
-
 export const Hero = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [0.6, 0.2]);
-
-  return <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Parallax */}
-      <motion.div className="absolute inset-0" style={{ y: backgroundY }}>
-        <motion.img 
-          src={heroPuzzle} 
-          alt="Mysterious puzzle box with golden light" 
-          className="w-full h-[120%] object-cover" 
-          style={{ opacity }}
-        />
+  return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img src={heroPuzzle} alt="Mysterious puzzle box with golden light" className="w-full h-full object-cover opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="absolute inset-0 geometric-pattern" />
-      </motion.div>
+      </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
