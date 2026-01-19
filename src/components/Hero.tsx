@@ -62,9 +62,6 @@ export const Hero = () => {
             <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-gold-light font-display text-lg px-8 py-6 glow-gold">
               <a href="#collection">Explore Collection</a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10 font-display text-lg px-8 py-6">
-              <a href="#subscription">Monthly Subscription</a>
-            </Button>
           </motion.div>
         </motion.div>
 
