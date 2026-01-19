@@ -1,9 +1,7 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { ProductGrid } from "@/components/ProductGrid";
-import { SubscriptionSection } from "@/components/SubscriptionSection";
 import { Footer } from "@/components/Footer";
-import { Separator } from "@/components/ui/separator";
 
 const SectionDivider = () => (
   <div className="flex items-center justify-center py-8">
@@ -22,8 +20,6 @@ const Index = () => {
       <Hero />
       <SectionDivider />
       <ProductGrid />
-      <SectionDivider />
-      <SubscriptionSection />
       <SectionDivider />
       <Footer />
     </div>
