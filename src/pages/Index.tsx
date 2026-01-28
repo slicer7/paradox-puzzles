@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { FeaturedProduct } from "@/components/FeaturedProduct";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Footer } from "@/components/Footer";
 
@@ -18,6 +19,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <Hero />
+      <SectionDivider />
+      <FeaturedProduct />
       <SectionDivider />
       <ProductGrid />
       <SectionDivider />
