@@ -6,7 +6,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ArrowLeft, ShoppingCart, Loader2, Minus, Plus } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Loader2, Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -14,6 +14,7 @@ const ProductPage = () => {
   const { handle } = useParams<{ handle: string }>();
   const [quantity, setQuantity] = useState(1);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
   const addItem = useCartStore(state => state.addItem);
   const isLoading = useCartStore(state => state.isLoading);
@@ -92,26 +93,55 @@ const ProductPage = () => {
               transition={{ duration: 0.6 }}
               className="space-y-4"
             >
-              {images[0] && (
-                <div className="aspect-square rounded-lg overflow-hidden bg-card border border-border">
+              {images[selectedImageIndex] && (
+                <div className="relative aspect-square rounded-lg overflow-hidden bg-card border border-border group">
                   <img
-                    src={images[0].node.url}
-                    alt={images[0].node.altText || product.title}
+                    src={images[selectedImageIndex].node.url}
+                    alt={images[selectedImageIndex].node.altText || product.title}
                     className="w-full h-full object-cover"
                   />
+                  
+                  {/* Navigation arrows */}
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setSelectedImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => setSelectedImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
               
+              {/* Thumbnail gallery */}
               {images.length > 1 && (
                 <div className="grid grid-cols-4 gap-4">
-                  {images.slice(1, 5).map((img, idx) => (
-                    <div key={idx} className="aspect-square rounded-md overflow-hidden bg-card border border-border">
+                  {images.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedImageIndex(idx)}
+                      className={`aspect-square rounded-md overflow-hidden bg-card border-2 transition-all ${
+                        selectedImageIndex === idx 
+                          ? 'border-primary ring-2 ring-primary/30' 
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                    >
                       <img
                         src={img.node.url}
                         alt={img.node.altText || product.title}
                         className="w-full h-full object-cover"
                       />
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}
