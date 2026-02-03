@@ -167,27 +167,35 @@ const ProductPage = () => {
                 {product.description || "A mysterious puzzle awaits discovery. Each box is handcrafted with precision and designed to challenge even the most seasoned puzzle enthusiasts."}
               </p>
 
-              {/* Variants */}
+              {/* Color Variants */}
               {variants.length > 1 && (
                 <div className="space-y-3">
                   <label className="font-display text-sm font-semibold text-foreground">
-                    Select Option
+                    Select Color
                   </label>
-                  <div className="flex flex-wrap gap-2">
-                    {variants.map((v, idx) => (
-                      <Button
-                        key={v.node.id}
-                        variant={selectedVariantIndex === idx ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedVariantIndex(idx)}
-                        className={selectedVariantIndex === idx 
-                          ? "bg-primary text-primary-foreground" 
-                          : "border-border text-foreground hover:border-primary"
-                        }
-                      >
-                        {v.node.title}
-                      </Button>
-                    ))}
+                  <div className="flex gap-3">
+                    {variants.map((v, idx) => {
+                      const colorName = v.node.title.toLowerCase();
+                      const colorClass = colorName === 'red' 
+                        ? 'bg-red-600' 
+                        : colorName === 'grey' || colorName === 'gray'
+                          ? 'bg-gray-500'
+                          : 'bg-muted';
+                      
+                      return (
+                        <button
+                          key={v.node.id}
+                          onClick={() => setSelectedVariantIndex(idx)}
+                          className={`w-10 h-10 rounded-md transition-all ${colorClass} ${
+                            selectedVariantIndex === idx 
+                              ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-110' 
+                              : 'hover:scale-105 opacity-80 hover:opacity-100'
+                          }`}
+                          title={v.node.title}
+                          aria-label={`Select ${v.node.title} color`}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               )}
