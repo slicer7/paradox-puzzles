@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-
 export const Footer = () => {
-  return (
-    <footer className="py-12 bg-card border-t border-border">
+  return <footer className="py-12 bg-card border-t border-border">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
@@ -10,9 +8,7 @@ export const Footer = () => {
             <Link to="/" className="font-display text-xl font-semibold text-gradient-gold">
               Paradox Puzzles
             </Link>
-            <p className="font-body text-muted-foreground">
-              Handcrafted puzzle boxes that challenge the mind and captivate the soul.
-            </p>
+            <p className="font-body text-muted-foreground">Handcrafted puzzle boxes that challenge the mind.</p>
           </div>
 
           {/* Links */}
@@ -43,6 +39,5 @@ export const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
