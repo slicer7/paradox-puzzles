@@ -33,8 +33,8 @@ export const Footer = () => {
             <h4 className="font-display text-lg font-semibold text-foreground">Contact</h4>
             <p className="font-body text-muted-foreground">
               Have questions? Reach out to us at<br />
-              <a href="mailto:hello@paradoxpuzzles.com" className="text-primary hover:text-gold-light transition-colors">
-                hello@paradoxpuzzles.com
+              <a href="mailto:hello@paradoxpuzzlebox.com" className="text-primary hover:text-gold-light transition-colors">
+                hello@paradoxpuzzlebox.com
               </a>
             </p>
           </div>
