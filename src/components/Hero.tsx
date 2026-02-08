@@ -34,11 +34,7 @@ export const Hero = () => {
             Unlock the Mystery
           </motion.p>
           
-          <img 
-            src={paradoxLogo} 
-            alt="Paradox Puzzles" 
-            className="h-48 md:h-64 lg:h-80 w-auto mb-6 mx-auto"
-          />
+          <img src={paradoxLogo} alt="Paradox Puzzles" className="h-48 md:h-64 lg:h-80 w-auto mb-6 mx-auto" />
           
           <motion.p initial={{
           opacity: 0
@@ -47,7 +43,7 @@ export const Hero = () => {
         }} transition={{
           delay: 0.5,
           duration: 0.6
-        }} className="font-body text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">Handcrafted puzzle boxes that challenge the mind and captivate the soul. A new puzzle awaits each month.</motion.p>
+        }} className="font-body text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">Handcrafted puzzle boxes that challenge the mind. A new puzzle awaits each month.</motion.p>
 
           <motion.div initial={{
           opacity: 0,
