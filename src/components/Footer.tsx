@@ -19,12 +19,9 @@ export const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-display text-lg font-semibold text-foreground">Quick Links</h4>
             <nav className="flex flex-col gap-2">
-              <a href="#collection" className="font-body text-muted-foreground hover:text-primary transition-colors">
+              <Link to="/#collection" className="font-body text-muted-foreground hover:text-primary transition-colors">
                 Collection
-              </a>
-              <a href="#subscription" className="font-body text-muted-foreground hover:text-primary transition-colors">
-                Subscribe
-              </a>
+              </Link>
             </nav>
           </div>
 
