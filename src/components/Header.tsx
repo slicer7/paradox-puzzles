@@ -17,9 +17,6 @@ export const Header = () => {
           <a href="#collection" className="font-body text-muted-foreground hover:text-primary transition-colors">
             Collection
           </a>
-          <a href="#subscription" className="font-body text-muted-foreground hover:text-primary transition-colors">
-            Subscribe
-          </a>
         </nav>
 
         <div className="flex items-center gap-4">
