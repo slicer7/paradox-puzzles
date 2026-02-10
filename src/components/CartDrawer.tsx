@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, Truck } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 
 export const CartDrawer = () => {
@@ -83,6 +83,23 @@ export const CartDrawer = () => {
                 </div>
               </div>
               <div className="flex-shrink-0 space-y-4 pt-4 border-t border-border bg-card">
+                {/* Free shipping progress */}
+                {totalPrice < 35 ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground font-body">
+                      <Truck className="w-4 h-4" />
+                      <span>${(35 - totalPrice).toFixed(2)} away from free shipping!</span>
+                    </div>
+                    <div className="w-full bg-secondary rounded-full h-1.5">
+                      <div className="bg-primary h-1.5 rounded-full transition-all" style={{ width: `${Math.min((totalPrice / 35) * 100, 100)}%` }} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-sm text-primary font-body font-medium">
+                    <Truck className="w-4 h-4" />
+                    <span>You've unlocked free shipping!</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-display font-semibold text-foreground">Total</span>
                   <span className="text-xl font-display font-bold text-primary">{items[0]?.price.currencyCode || '$'} {totalPrice.toFixed(2)}</span>
