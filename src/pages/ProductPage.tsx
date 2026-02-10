@@ -6,7 +6,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ArrowLeft, ShoppingCart, Loader2, Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Loader2, Minus, Plus, ChevronLeft, ChevronRight, Truck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -244,6 +244,11 @@ const ProductPage = () => {
                   </>
                 )}
               </Button>
+
+              <div className="flex items-center gap-2 text-muted-foreground font-body text-sm justify-center">
+                <Truck className="w-4 h-4 text-primary" />
+                <span>Free shipping on orders over $35</span>
+              </div>
 
               {selectedVariant && !selectedVariant.availableForSale && (
                 <p className="text-destructive font-body text-center">
