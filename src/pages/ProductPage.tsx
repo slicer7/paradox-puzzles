@@ -257,6 +257,30 @@ const ProductPage = () => {
               )}
             </motion.div>
           </div>
+
+          {/* Tutorial Video */}
+          {handle === 'the-pillar' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mt-16"
+            >
+              <h2 className="font-display text-3xl font-bold text-foreground mb-6 text-center">
+                How to Solve The Pillar
+              </h2>
+              <div className="max-w-3xl mx-auto aspect-video rounded-lg overflow-hidden border border-border">
+                <iframe
+                  src="https://www.youtube.com/embed/NWX3C8KuoJ4"
+                  title="How to Solve The Pillar"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+            </motion.div>
+          )}
         </div>
       </main>
 
