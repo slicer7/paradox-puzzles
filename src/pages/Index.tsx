@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { FeaturedProduct } from "@/components/FeaturedProduct";
 import { ProductGrid } from "@/components/ProductGrid";
+import { About } from "@/components/About";
 import { Footer } from "@/components/Footer";
 
 const SectionDivider = () => (
@@ -23,6 +24,8 @@ const Index = () => {
       <FeaturedProduct />
       <SectionDivider />
       <ProductGrid />
+      <SectionDivider />
+      <About />
       <SectionDivider />
       <Footer />
     </div>
