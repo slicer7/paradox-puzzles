@@ -9,7 +9,7 @@ import {
 const FAQS = [
   {
     q: "How hard are the puzzles to solve?",
-    a: "Most people solve their first Paradox box in 10–30 minutes. They're designed to be challenging enough to be satisfying, but never so frustrating that they end up in a drawer. If you get truly stuck, every product page includes a solution video.",
+    a: "Most people solve their first Paradox box in under 15 minutes. They're designed to be challenging enough to be satisfying, but never so frustrating that they end up in a drawer. If you get truly stuck, every product page includes a solution video.",
   },
   {
     q: "What are the boxes made of?",
