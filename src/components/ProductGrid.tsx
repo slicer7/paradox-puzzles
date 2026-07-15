@@ -20,13 +20,13 @@ export const ProductGrid = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-primary font-body text-lg tracking-[0.3em] uppercase mb-4">
+          <p className="kicker mb-3">
             The Collection
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-gradient-gold mb-6">
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-gradient-gold mb-5">
             Puzzle Boxes
           </h2>
-          <p className="font-body text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Each box is a unique journey of discovery, crafted with precision and designed to perplex.
           </p>
         </motion.div>
@@ -40,11 +40,13 @@ export const ProductGrid = () => {
             Failed to load products. Please try again.
           </div>
         ) : products && products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {products
               .filter((product) => product.node.productType !== 'Subscription')
               .map((product, index) => (
-                <ProductCard key={product.node.id} product={product} index={index} />
+                <div key={product.node.id} className="w-full sm:w-[300px] lg:w-[320px]">
+                  <ProductCard product={product} index={index} />
+                </div>
               ))}
           </div>
         ) : (
