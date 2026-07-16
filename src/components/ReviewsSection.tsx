@@ -224,7 +224,7 @@ export const ReviewsSection = ({
             </div>
           )}
         </div>
-        <WriteReviewDialog productTitle={productTitle} />
+        <WriteReviewDialog productTitle={productTitle} productHandle={productHandle} />
       </div>
 
       {productReviews.length === 0 ? (
