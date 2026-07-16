@@ -9,6 +9,7 @@ import ProductPage from "./pages/ProductPage";
 import PolicyPage from "./pages/PolicyPage";
 import NotFound from "./pages/NotFound";
 import Unsubscribe from "./pages/Unsubscribe";
+import ReviewAction from "./pages/ReviewAction";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const AppContent = () => {
         <Route path="/product/:handle" element={<ProductPage />} />
         <Route path="/policies/:slug" element={<PolicyPage />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        <Route path="/review-action" element={<ReviewAction />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

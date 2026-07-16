@@ -1,17 +1,5 @@
-// Customer reviews shown on product pages.
-//
-// To add a real review, append an entry to the array below:
-// {
-//   productHandle: "the-pillar",   // the product's Shopify handle (from its URL)
-//   name: "Jane D.",
-//   rating: 5,                      // 1-5
-//   date: "2026-08-01",             // YYYY-MM-DD
-//   title: "Best gift ever",
-//   text: "My brother spent 45 minutes trying to get his birthday card out...",
-// }
-//
-// Reviews arrive by email (customers use the "Write a review" button),
-// so paste them here once you've read them.
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Review {
   productHandle: string;
@@ -22,12 +10,43 @@ export interface Review {
   text: string;
 }
 
-export const reviews: Review[] = [];
+export function useReviewsForProduct(handle: string) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export function getReviewsForProduct(handle: string): Review[] {
-  return reviews
-    .filter((r) => r.productHandle === handle)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    supabase
+      .from("product_reviews")
+      .select("product_handle, reviewer_name, rating, title, text, approved_at, created_at")
+      .eq("product_handle", handle)
+      .eq("status", "approved")
+      .order("approved_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data) {
+          setReviews([]);
+        } else {
+          setReviews(
+            data.map((r) => ({
+              productHandle: r.product_handle,
+              name: r.reviewer_name || "Anonymous",
+              rating: r.rating as 1 | 2 | 3 | 4 | 5,
+              date: (r.approved_at ?? r.created_at) as string,
+              title: r.title ?? "",
+              text: r.text,
+            }))
+          );
+        }
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [handle]);
+
+  return { reviews, loading };
 }
 
 export function getAverageRating(items: Review[]): number | null {

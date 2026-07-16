@@ -2,6 +2,7 @@
 import * as React from 'npm:react@18.3.1'
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -22,6 +23,8 @@ interface Props {
   title?: string
   text?: string
   submittedAt?: string
+  approveUrl?: string
+  rejectUrl?: string
 }
 
 const Email = ({
@@ -33,6 +36,8 @@ const Email = ({
   title = '',
   text = '',
   submittedAt = new Date().toISOString(),
+  approveUrl = '',
+  rejectUrl = '',
 }: Props) => {
   const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
   const formattedDate = new Date(submittedAt).toLocaleString(undefined, {
@@ -92,9 +97,26 @@ const Email = ({
             <Text style={value}>{formattedDate}</Text>
           </Section>
 
+          {approveUrl || rejectUrl ? (
+            <Section style={{ textAlign: 'center', marginTop: '28px' }}>
+              <Text style={{ ...muted, marginBottom: '12px' }}>
+                One click to publish or discard this review:
+              </Text>
+              {approveUrl ? (
+                <Button href={approveUrl} style={approveBtn}>
+                  Approve &amp; publish
+                </Button>
+              ) : null}
+              {rejectUrl ? (
+                <Button href={rejectUrl} style={rejectBtn}>
+                  Reject
+                </Button>
+              ) : null}
+            </Section>
+          ) : null}
+
           <Text style={footerNote}>
-            To publish this review on the site, add it to{' '}
-            <code style={code}>src/data/reviews.ts</code> in the project.
+            You'll be asked to confirm before the review is published or discarded.
           </Text>
         </Container>
       </Body>
@@ -117,6 +139,8 @@ export const template = {
     title: 'Best gift ever',
     text: 'My brother spent 45 minutes trying to open his birthday card. Worth every penny.',
     submittedAt: new Date().toISOString(),
+    approveUrl: 'https://paradoxpuzzlebox.com/review-action?token=preview&action=approve',
+    rejectUrl: 'https://paradoxpuzzlebox.com/review-action?token=preview&action=reject',
   },
 } satisfies TemplateEntry
 
@@ -167,4 +191,26 @@ const code = {
   borderRadius: '4px',
   fontFamily: 'monospace',
   fontSize: '12px',
+}
+const approveBtn = {
+  backgroundColor: '#c9a961',
+  color: '#0a0a0a',
+  fontWeight: 700,
+  fontFamily: 'Georgia, serif',
+  padding: '12px 22px',
+  borderRadius: '6px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  marginRight: '10px',
+}
+const rejectBtn = {
+  backgroundColor: '#ffffff',
+  color: '#0a0a0a',
+  fontWeight: 600,
+  fontFamily: 'Georgia, serif',
+  padding: '11px 20px',
+  borderRadius: '6px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  border: '1px solid #d4d4d4',
 }

@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { getAverageRating, getReviewsForProduct } from "@/data/reviews";
+import { getAverageRating, useReviewsForProduct } from "@/data/reviews";
 import { cn } from "@/lib/utils";
 
 
@@ -54,20 +54,16 @@ const WriteReviewDialog = ({
     if (!text.trim()) return;
     setSubmitting(true);
     try {
-      const { error } = await supabase.functions.invoke("send-transactional-email", {
+      const { error } = await supabase.functions.invoke("submit-review", {
         body: {
-          templateName: "review-submission",
-          idempotencyKey: `review-${productHandle}-${Date.now()}`,
-          templateData: {
-            productTitle,
-            productHandle,
-            reviewerName: name.trim() || "Anonymous",
-            reviewerEmail: email.trim(),
-            rating,
-            title: title.trim(),
-            text: text.trim(),
-            submittedAt: new Date().toISOString(),
-          },
+          productTitle,
+          productHandle,
+          reviewerName: name.trim(),
+          reviewerEmail: email.trim(),
+          rating,
+          title: title.trim(),
+          text: text.trim(),
+          siteOrigin: window.location.origin,
         },
       });
       if (error) throw error;
@@ -198,7 +194,7 @@ export const ReviewsSection = ({
   productHandle: string;
   productTitle: string;
 }) => {
-  const productReviews = getReviewsForProduct(productHandle);
+  const { reviews: productReviews } = useReviewsForProduct(productHandle);
   const average = getAverageRating(productReviews);
 
   return (
