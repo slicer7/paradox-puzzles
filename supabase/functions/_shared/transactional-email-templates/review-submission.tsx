@@ -192,3 +192,25 @@ const code = {
   fontFamily: 'monospace',
   fontSize: '12px',
 }
+const approveBtn = {
+  backgroundColor: '#c9a961',
+  color: '#0a0a0a',
+  fontWeight: 700,
+  fontFamily: 'Georgia, serif',
+  padding: '12px 22px',
+  borderRadius: '6px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  marginRight: '10px',
+}
+const rejectBtn = {
+  backgroundColor: '#ffffff',
+  color: '#0a0a0a',
+  fontWeight: 600,
+  fontFamily: 'Georgia, serif',
+  padding: '11px 20px',
+  borderRadius: '6px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  border: '1px solid #d4d4d4',
+}
