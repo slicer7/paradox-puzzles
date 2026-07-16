@@ -102,8 +102,7 @@ const WriteReviewDialog = ({
         <DialogHeader>
           <DialogTitle className="font-display">Review {productTitle}</DialogTitle>
           <DialogDescription className="font-body">
-            Your review opens in your email app and is sent straight to us. We publish
-            every genuine review we receive.
+            Send us your review. We read every one and publish the genuine ones on the site.
           </DialogDescription>
         </DialogHeader>
 
@@ -130,13 +129,37 @@ const WriteReviewDialog = ({
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="review-name" className="font-body">Your name</Label>
+              <Input
+                id="review-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Jane D."
+                className="bg-input border-border font-body"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="review-email" className="font-body">Email (optional)</Label>
+              <Input
+                id="review-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="bg-input border-border font-body"
+              />
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="review-name" className="font-body">Your name</Label>
+            <Label htmlFor="review-title" className="font-body">Title (optional)</Label>
             <Input
-              id="review-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Jane D."
+              id="review-title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Best gift ever"
               className="bg-input border-border font-body"
             />
           </div>
@@ -157,10 +180,10 @@ const WriteReviewDialog = ({
         <DialogFooter>
           <Button
             onClick={handleSubmit}
-            disabled={!text.trim()}
+            disabled={!text.trim() || submitting}
             className="bg-primary text-primary-foreground hover:bg-gold-light font-body font-semibold w-full sm:w-auto"
           >
-            Send review
+            {submitting ? "Sending…" : "Send review"}
           </Button>
         </DialogFooter>
       </DialogContent>
