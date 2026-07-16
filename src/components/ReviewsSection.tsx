@@ -54,20 +54,16 @@ const WriteReviewDialog = ({
     if (!text.trim()) return;
     setSubmitting(true);
     try {
-      const { error } = await supabase.functions.invoke("send-transactional-email", {
+      const { error } = await supabase.functions.invoke("submit-review", {
         body: {
-          templateName: "review-submission",
-          idempotencyKey: `review-${productHandle}-${Date.now()}`,
-          templateData: {
-            productTitle,
-            productHandle,
-            reviewerName: name.trim() || "Anonymous",
-            reviewerEmail: email.trim(),
-            rating,
-            title: title.trim(),
-            text: text.trim(),
-            submittedAt: new Date().toISOString(),
-          },
+          productTitle,
+          productHandle,
+          reviewerName: name.trim(),
+          reviewerEmail: email.trim(),
+          rating,
+          title: title.trim(),
+          text: text.trim(),
+          siteOrigin: window.location.origin,
         },
       });
       if (error) throw error;
