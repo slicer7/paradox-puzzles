@@ -30,7 +30,7 @@ export const Hero = () => {
               src={paradoxLogo}
               alt="Paradox Puzzles"
               className="relative h-28 sm:h-36 md:h-44 w-auto mx-auto"
-              fetchpriority="high"
+              fetchPriority="high"
             />
           </div>
 
