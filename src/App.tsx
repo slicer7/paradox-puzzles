@@ -9,6 +9,7 @@ import ProductPage from "./pages/ProductPage";
 import PolicyPage from "./pages/PolicyPage";
 import NotFound from "./pages/NotFound";
 import Unsubscribe from "./pages/Unsubscribe";
+import ReviewAction from "./pages/ReviewAction";
 
 const queryClient = new QueryClient();
 
