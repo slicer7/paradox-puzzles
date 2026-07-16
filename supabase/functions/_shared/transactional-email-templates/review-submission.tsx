@@ -139,6 +139,8 @@ export const template = {
     title: 'Best gift ever',
     text: 'My brother spent 45 minutes trying to open his birthday card. Worth every penny.',
     submittedAt: new Date().toISOString(),
+    approveUrl: 'https://paradoxpuzzlebox.com/review-action?token=preview&action=approve',
+    rejectUrl: 'https://paradoxpuzzlebox.com/review-action?token=preview&action=reject',
   },
 } satisfies TemplateEntry
 
