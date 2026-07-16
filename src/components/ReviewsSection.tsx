@@ -198,7 +198,7 @@ export const ReviewsSection = ({
   productHandle: string;
   productTitle: string;
 }) => {
-  const productReviews = getReviewsForProduct(productHandle);
+  const { reviews: productReviews } = useReviewsForProduct(productHandle);
   const average = getAverageRating(productReviews);
 
   return (
