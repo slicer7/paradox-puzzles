@@ -97,9 +97,26 @@ const Email = ({
             <Text style={value}>{formattedDate}</Text>
           </Section>
 
+          {approveUrl || rejectUrl ? (
+            <Section style={{ textAlign: 'center', marginTop: '28px' }}>
+              <Text style={{ ...muted, marginBottom: '12px' }}>
+                One click to publish or discard this review:
+              </Text>
+              {approveUrl ? (
+                <Button href={approveUrl} style={approveBtn}>
+                  Approve &amp; publish
+                </Button>
+              ) : null}
+              {rejectUrl ? (
+                <Button href={rejectUrl} style={rejectBtn}>
+                  Reject
+                </Button>
+              ) : null}
+            </Section>
+          ) : null}
+
           <Text style={footerNote}>
-            To publish this review on the site, add it to{' '}
-            <code style={code}>src/data/reviews.ts</code> in the project.
+            You'll be asked to confirm before the review is published or discarded.
           </Text>
         </Container>
       </Body>
