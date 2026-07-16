@@ -23,6 +23,8 @@ interface Props {
   title?: string
   text?: string
   submittedAt?: string
+  approveUrl?: string
+  rejectUrl?: string
 }
 
 const Email = ({
@@ -34,6 +36,8 @@ const Email = ({
   title = '',
   text = '',
   submittedAt = new Date().toISOString(),
+  approveUrl = '',
+  rejectUrl = '',
 }: Props) => {
   const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
   const formattedDate = new Date(submittedAt).toLocaleString(undefined, {
