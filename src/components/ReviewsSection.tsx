@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getAverageRating, getReviewsForProduct } from "@/data/reviews";
 import { cn } from "@/lib/utils";
 
-const REVIEW_EMAIL = "paradoxpuzzlebox@gmail.com";
+
 
 const Stars = ({ value, className }: { value: number; className?: string }) => (
   <div className={cn("flex items-center gap-0.5", className)} aria-label={`${value} out of 5 stars`}>
@@ -35,19 +35,59 @@ const Stars = ({ value, className }: { value: number; className?: string }) => (
   </div>
 );
 
-const WriteReviewDialog = ({ productTitle }: { productTitle: string }) => {
+const WriteReviewDialog = ({
+  productTitle,
+  productHandle,
+}: {
+  productTitle: string;
+  productHandle: string;
+}) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    const subject = encodeURIComponent(`Review: ${productTitle} (${rating}/5)`);
-    const body = encodeURIComponent(
-      `Product: ${productTitle}\nRating: ${rating}/5\nName: ${name}\n\n${text}`
-    );
-    window.location.href = `mailto:${REVIEW_EMAIL}?subject=${subject}&body=${body}`;
-    setOpen(false);
+  const handleSubmit = async () => {
+    if (!text.trim()) return;
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "review-submission",
+          idempotencyKey: `review-${productHandle}-${Date.now()}`,
+          templateData: {
+            productTitle,
+            productHandle,
+            reviewerName: name.trim() || "Anonymous",
+            reviewerEmail: email.trim(),
+            rating,
+            title: title.trim(),
+            text: text.trim(),
+            submittedAt: new Date().toISOString(),
+          },
+        },
+      });
+      if (error) throw error;
+      toast.success("Thanks — your review was sent!", {
+        description: "We'll read it and publish it soon.",
+      });
+      setOpen(false);
+      setName("");
+      setEmail("");
+      setTitle("");
+      setText("");
+      setRating(5);
+    } catch (err) {
+      console.error("Review submit failed", err);
+      toast.error("Couldn't send review", {
+        description: "Please try again in a moment.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
