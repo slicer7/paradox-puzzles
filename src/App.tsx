@@ -23,6 +23,7 @@ const AppContent = () => {
         <Route path="/product/:handle" element={<ProductPage />} />
         <Route path="/policies/:slug" element={<PolicyPage />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        <Route path="/review-action" element={<ReviewAction />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
