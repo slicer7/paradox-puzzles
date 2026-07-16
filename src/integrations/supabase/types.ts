@@ -101,6 +101,51 @@ export type Database = {
         }
         Relationships: []
       }
+      product_reviews: {
+        Row: {
+          action_token: string
+          approved_at: string | null
+          created_at: string
+          id: string
+          product_handle: string
+          product_title: string
+          rating: number
+          reviewer_email: string | null
+          reviewer_name: string
+          status: string
+          text: string
+          title: string | null
+        }
+        Insert: {
+          action_token: string
+          approved_at?: string | null
+          created_at?: string
+          id?: string
+          product_handle: string
+          product_title: string
+          rating: number
+          reviewer_email?: string | null
+          reviewer_name: string
+          status?: string
+          text: string
+          title?: string | null
+        }
+        Update: {
+          action_token?: string
+          approved_at?: string | null
+          created_at?: string
+          id?: string
+          product_handle?: string
+          product_title?: string
+          rating?: number
+          reviewer_email?: string | null
+          reviewer_name?: string
+          status?: string
+          text?: string
+          title?: string | null
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
