@@ -172,7 +172,42 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      product_reviews_public: {
+        Row: {
+          approved_at: string | null
+          created_at: string | null
+          id: string | null
+          product_handle: string | null
+          product_title: string | null
+          rating: number | null
+          reviewer_name: string | null
+          text: string | null
+          title: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          product_handle?: string | null
+          product_title?: string | null
+          rating?: number | null
+          reviewer_name?: string | null
+          text?: string | null
+          title?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          created_at?: string | null
+          id?: string | null
+          product_handle?: string | null
+          product_title?: string | null
+          rating?: number | null
+          reviewer_name?: string | null
+          text?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       delete_email: {
