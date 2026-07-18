@@ -17,11 +17,10 @@ export function useReviewsForProduct(handle: string) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    supabase
-      .from("product_reviews")
+    (supabase as any)
+      .from("product_reviews_public")
       .select("product_handle, reviewer_name, rating, title, text, approved_at, created_at")
       .eq("product_handle", handle)
-      .eq("status", "approved")
       .order("approved_at", { ascending: false })
       .then(({ data, error }) => {
         if (cancelled) return;
