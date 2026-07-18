@@ -102,7 +102,17 @@ Deno.serve(async (req) => {
     )
   }
 
-  if (!templateName) {
+  // Validate templateData shape/size before rendering
+  const parsedData = TemplateDataSchema.safeParse(templateData)
+  if (!parsedData.success) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid templateData', details: parsedData.error.flatten() }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+  templateData = parsedData.data
+
+  if (!templateName || typeof templateName !== 'string' || templateName.length > 100) {
     return new Response(
       JSON.stringify({ error: 'templateName is required' }),
       {
