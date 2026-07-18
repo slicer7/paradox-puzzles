@@ -70,7 +70,9 @@ Deno.serve(async (req) => {
   const approveUrl = `${origin}/review-action?token=${token}&action=approve`
   const rejectUrl = `${origin}/review-action?token=${token}&action=reject`
 
-  const { error: emailError } = await supabase.functions.invoke('send-transactional-email', {
+  const internalSecret = Deno.env.get('INTERNAL_EMAIL_SECRET') ?? ''
+  const emailResp = await supabase.functions.invoke('send-transactional-email', {
+    headers: { 'x-internal-secret': internalSecret },
     body: {
       templateName: 'review-submission',
       idempotencyKey: `review-${inserted.id}`,
@@ -89,8 +91,8 @@ Deno.serve(async (req) => {
     },
   })
 
-  if (emailError) {
-    console.error('Failed to send notification email', emailError)
+  if (emailResp.error) {
+    console.error('Failed to send notification email', emailResp.error)
     // Review is saved; owner can still approve via DB if needed.
   }
 
