@@ -2,7 +2,24 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+import { z } from 'npm:zod@3.23.8'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
+
+// Schema for validating templateData. Kept permissive on unknown keys, but
+// bounds every string so oversized/malformed payloads are rejected before
+// they hit the render/enqueue pipeline.
+const TemplateDataSchema = z
+  .record(
+    z.union([
+      z.string().max(4000),
+      z.number(),
+      z.boolean(),
+      z.null(),
+    ]),
+  )
+  .refine((obj) => Object.keys(obj).length <= 30, {
+    message: 'templateData has too many keys',
+  })
 
 // Configuration baked in at scaffold time — do NOT change these manually.
 // To update, re-run the email domain setup flow.
