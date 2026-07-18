@@ -2,7 +2,24 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+import { z } from 'npm:zod@3.23.8'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
+
+// Schema for validating templateData. Kept permissive on unknown keys, but
+// bounds every string so oversized/malformed payloads are rejected before
+// they hit the render/enqueue pipeline.
+const TemplateDataSchema = z
+  .record(
+    z.union([
+      z.string().max(4000),
+      z.number(),
+      z.boolean(),
+      z.null(),
+    ]),
+  )
+  .refine((obj) => Object.keys(obj).length <= 30, {
+    message: 'templateData has too many keys',
+  })
 
 // Configuration baked in at scaffold time — do NOT change these manually.
 // To update, re-run the email domain setup flow.
@@ -25,15 +42,26 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// Auth note: this function requires a shared internal secret so it can only be
+// invoked by trusted server-side callers (e.g. our own edge functions). A valid
+// anon JWT alone is not sufficient. Callers must pass the secret in the
+// `x-internal-secret` header.
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
+
+  const internalSecret = Deno.env.get('INTERNAL_EMAIL_SECRET')
+  const providedSecret = req.headers.get('x-internal-secret')
+  if (!internalSecret || providedSecret !== internalSecret) {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
@@ -74,7 +102,17 @@ Deno.serve(async (req) => {
     )
   }
 
-  if (!templateName) {
+  // Validate templateData shape/size before rendering
+  const parsedData = TemplateDataSchema.safeParse(templateData)
+  if (!parsedData.success) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid templateData', details: parsedData.error.flatten() }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+  templateData = parsedData.data
+
+  if (!templateName || typeof templateName !== 'string' || templateName.length > 100) {
     return new Response(
       JSON.stringify({ error: 'templateName is required' }),
       {
