@@ -7,6 +7,7 @@ import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/lib/fbq";
 
 export const FeaturedProduct = () => {
   const addItem = useCartStore(state => state.addItem);
@@ -17,10 +18,7 @@ export const FeaturedProduct = () => {
     queryFn: () => fetchProducts(12),
   });
 
-  // Get the latest non-subscription product
-  const latestProduct = products
-    ?.filter((p) => p.node.productType !== 'Subscription')
-    ?.[0] as ShopifyProduct | undefined;
+  const latestProduct = products?.[0] as ShopifyProduct | undefined;
 
   if (isLoadingProducts) {
     return (
@@ -52,6 +50,14 @@ export const FeaturedProduct = () => {
       price: variant.price,
       quantity: 1,
       selectedOptions: variant.selectedOptions || []
+    });
+
+    trackAddToCart({
+      id: variant.id,
+      name: node.title,
+      price: variant.price.amount,
+      currency: variant.price.currencyCode,
+      quantity: 1,
     });
 
     toast.success("Added to cart", {
