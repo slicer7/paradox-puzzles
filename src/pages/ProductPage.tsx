@@ -55,6 +55,17 @@ const ProductPage = () => {
     window.scrollTo(0, 0);
   }, [handle]);
 
+  useEffect(() => {
+    const variant = product?.variants.edges[selectedVariantIndex]?.node;
+    if (!product || !variant) return;
+    trackViewContent({
+      id: variant.id,
+      name: product.title,
+      price: variant.price.amount,
+      currency: variant.price.currencyCode,
+    });
+  }, [product, selectedVariantIndex]);
+
   if (productLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -99,16 +110,8 @@ const ProductPage = () => {
     },
   };
 
-  useEffect(() => {
-    if (!product || !selectedVariant) return;
-    trackViewContent({
-      id: selectedVariant.id,
-      name: product.title,
-      price: selectedVariant.price.amount,
-      currency: selectedVariant.price.currencyCode,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product?.id, selectedVariant?.id]);
+
+
 
   const handleAddToCart = async () => {
     if (!selectedVariant) return;
