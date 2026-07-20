@@ -6,6 +6,7 @@ import { ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/lib/fbq";
 
 interface ProductCardProps {
   product: ShopifyProduct;
@@ -34,6 +35,14 @@ export const ProductCard = ({ product, index }: ProductCardProps) => {
       price: variant.price,
       quantity: 1,
       selectedOptions: variant.selectedOptions || []
+    });
+
+    trackAddToCart({
+      id: variant.id,
+      name: node.title,
+      price: variant.price.amount,
+      currency: variant.price.currencyCode,
+      quantity: 1,
     });
 
     toast.success("Added to cart", {

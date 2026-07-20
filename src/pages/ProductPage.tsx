@@ -28,6 +28,7 @@ import {
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+import { trackAddToCart, trackViewContent } from "@/lib/fbq";
 
 const TRUST_POINTS = [
   { icon: Truck, label: "Ships in 3–5 business days · Free US shipping over $35" },
@@ -98,6 +99,17 @@ const ProductPage = () => {
     },
   };
 
+  useEffect(() => {
+    if (!product || !selectedVariant) return;
+    trackViewContent({
+      id: selectedVariant.id,
+      name: product.title,
+      price: selectedVariant.price.amount,
+      currency: selectedVariant.price.currencyCode,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id, selectedVariant?.id]);
+
   const handleAddToCart = async () => {
     if (!selectedVariant) return;
 
@@ -108,6 +120,14 @@ const ProductPage = () => {
       price: selectedVariant.price,
       quantity,
       selectedOptions: selectedVariant.selectedOptions || []
+    });
+
+    trackAddToCart({
+      id: selectedVariant.id,
+      name: product.title,
+      price: selectedVariant.price.amount,
+      currency: selectedVariant.price.currencyCode,
+      quantity,
     });
 
     toast.success("Added to cart", {

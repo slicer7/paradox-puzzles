@@ -41,13 +41,11 @@ export const ProductGrid = () => {
           </div>
         ) : products && products.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-6">
-            {products
-              .filter((product) => product.node.productType !== 'Subscription')
-              .map((product, index) => (
-                <div key={product.node.id} className="w-full sm:w-[300px] lg:w-[320px]">
-                  <ProductCard product={product} index={index} />
-                </div>
-              ))}
+            {products.map((product, index) => (
+              <div key={product.node.id} className="w-full sm:w-[300px] lg:w-[320px]">
+                <ProductCard product={product} index={index} />
+              </div>
+            ))}
           </div>
         ) : (
           <motion.div
