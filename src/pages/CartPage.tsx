@@ -18,17 +18,17 @@ const CartPage = () => {
     window.scrollTo(0, 0);
   }, [syncCart]);
 
+  const checkoutUrl = getCheckoutUrl();
+  const canCheckout = items.length > 0 && !isLoading && !isSyncing && !!checkoutUrl;
+
   const handleCheckout = () => {
-    const checkoutUrl = getCheckoutUrl();
-    if (checkoutUrl) {
-      trackInitiateCheckout({
-        ids: items.map((i) => i.variantId),
-        value: totalPrice,
-        numItems: totalItems,
-        currency: items[0]?.price.currencyCode || "USD",
-      });
-      window.open(checkoutUrl, "_blank");
-    }
+    if (!canCheckout) return;
+    trackInitiateCheckout({
+      ids: items.map((i) => i.variantId),
+      value: totalPrice,
+      numItems: totalItems,
+      currency: items[0]?.price.currencyCode || "USD",
+    });
   };
 
   return (
