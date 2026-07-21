@@ -18,17 +18,17 @@ const CartPage = () => {
     window.scrollTo(0, 0);
   }, [syncCart]);
 
+  const checkoutUrl = getCheckoutUrl();
+  const canCheckout = items.length > 0 && !isLoading && !isSyncing && !!checkoutUrl;
+
   const handleCheckout = () => {
-    const checkoutUrl = getCheckoutUrl();
-    if (checkoutUrl) {
-      trackInitiateCheckout({
-        ids: items.map((i) => i.variantId),
-        value: totalPrice,
-        numItems: totalItems,
-        currency: items[0]?.price.currencyCode || "USD",
-      });
-      window.open(checkoutUrl, "_blank");
-    }
+    if (!canCheckout) return;
+    trackInitiateCheckout({
+      ids: items.map((i) => i.variantId),
+      value: totalPrice,
+      numItems: totalItems,
+      currency: items[0]?.price.currencyCode || "USD",
+    });
   };
 
   return (
@@ -132,19 +132,34 @@ const CartPage = () => {
                     </span>
                   </div>
                   <Button
-                    onClick={handleCheckout}
+                    asChild
                     className="w-full bg-primary text-primary-foreground hover:bg-gold-light font-body font-semibold"
                     size="lg"
-                    disabled={items.length === 0 || isLoading || isSyncing}
+                    disabled={!canCheckout}
                   >
-                    {isLoading || isSyncing ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Proceed to Checkout
-                      </>
-                    )}
+                    <a
+                      id="proceed-to-checkout"
+                      href={checkoutUrl || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        if (!canCheckout) {
+                          e.preventDefault();
+                          return;
+                        }
+                        handleCheckout();
+                      }}
+                      aria-disabled={!canCheckout}
+                    >
+                      {isLoading || isSyncing ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Proceed to Checkout
+                        </>
+                      )}
+                    </a>
                   </Button>
                   <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground font-body">
                     <Lock className="w-3 h-3" />
