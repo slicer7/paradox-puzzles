@@ -41,7 +41,7 @@ export const CartDrawer = () => {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-lg flex flex-col h-full bg-card border-border">
+      <SheetContent className="w-full sm:max-w-lg flex flex-col h-full bg-card border-border" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader className="flex-shrink-0">
           <SheetTitle className="text-foreground font-display">Your Cart</SheetTitle>
           <SheetDescription className="text-muted-foreground">
