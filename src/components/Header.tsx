@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { CartDrawer } from "./CartDrawer";
+import { CartButton } from "./CartButton";
 import paradoxLogo from "@/assets/paradox-logo.webp";
 
 const NAV_LINKS = [
@@ -50,7 +50,7 @@ export const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1">
-          <CartDrawer />
+          <CartButton />
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button
