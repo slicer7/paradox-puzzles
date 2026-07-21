@@ -31,7 +31,7 @@ import { toast } from "sonner";
 import { trackAddToCart, trackViewContent } from "@/lib/fbq";
 
 const TRUST_POINTS = [
-  { icon: Truck, label: "Ships in 3–5 business days · Free US shipping over $35" },
+  { icon: Truck, label: "Ships in 3–5 business days · Free US shipping on every order" },
   { icon: ShieldCheck, label: "30-day money-back guarantee" },
   { icon: Lock, label: "Secure checkout powered by Shopify" },
 ];
