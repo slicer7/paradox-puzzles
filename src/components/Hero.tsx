@@ -4,7 +4,7 @@ import { ShieldCheck, Truck, Lock } from "lucide-react";
 import paradoxLogo from "@/assets/paradox-logo.webp";
 
 const TRUST_ITEMS = [
-  { icon: Truck, label: "Free US shipping over $35" },
+  { icon: Truck, label: "Free US shipping on every order" },
   { icon: ShieldCheck, label: "30-day money-back guarantee" },
   { icon: Lock, label: "Secure checkout by Shopify" },
 ];

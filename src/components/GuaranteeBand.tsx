@@ -5,7 +5,7 @@ const ITEMS = [
   {
     icon: Truck,
     title: "Fast, careful shipping",
-    text: "Orders ship in 3–5 business days, packed to survive the trip. Free US shipping over $35.",
+    text: "Orders ship in 3–5 business days, packed to survive the trip. Free US shipping on every order.",
   },
   {
     icon: ShieldCheck,
