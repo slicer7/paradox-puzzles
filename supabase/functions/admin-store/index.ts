@@ -246,6 +246,15 @@ Deno.serve(async (req) => {
         return json({ success: true })
       }
 
+      case 'delete_review': {
+        const reviewId = String(payload.review_id ?? '')
+        if (!reviewId) return json({ error: 'Missing review id' }, 400)
+        const { error } = await admin.from('product_reviews').delete().eq('id', reviewId)
+        if (error) return json({ error: error.message }, 500)
+        return json({ success: true })
+      }
+
+
       default:
         return json({ error: 'Unknown action' }, 400)
     }

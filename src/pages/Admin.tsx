@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus } from "lucide-react";
+import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus, Home } from "lucide-react";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -84,6 +84,10 @@ const Admin = () => {
             <p className="font-body text-sm text-muted-foreground">{email}</p>
           </div>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate("/")}>
+              <Home className="w-4 h-4 mr-2" />
+              Home
+            </Button>
             <Button variant="outline" onClick={refresh} disabled={loading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
               Refresh
@@ -214,6 +218,24 @@ const Admin = () => {
                           Reject
                         </Button>
                       )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={async () => {
+                          if (!confirm("Delete this review permanently?")) return;
+                          try {
+                            await adminCall({ action: "delete_review", review_id: review.id });
+                            toast.success("Review deleted");
+                            refresh();
+                          } catch (e) {
+                            toast.error(e instanceof Error ? e.message : "Failed");
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </Button>
+
                     </div>
                   </Card>
                 ))
