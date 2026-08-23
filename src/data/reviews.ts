@@ -18,10 +18,8 @@ export function useReviewsForProduct(handle: string) {
     let cancelled = false;
     setLoading(true);
     (supabase as any)
-      .from("product_reviews_public")
-      .select("product_handle, reviewer_name, rating, title, text, approved_at, created_at")
-      .eq("product_handle", handle)
-      .order("approved_at", { ascending: false })
+    (supabase as any)
+      .rpc("get_approved_reviews", { _product_handle: handle })
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error || !data) {
