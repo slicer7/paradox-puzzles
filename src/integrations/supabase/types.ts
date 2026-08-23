@@ -240,6 +240,20 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_approved_reviews: {
+        Args: { _product_handle?: string }
+        Returns: {
+          approved_at: string
+          created_at: string
+          id: string
+          product_handle: string
+          product_title: string
+          rating: number
+          reviewer_name: string
+          text: string
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
