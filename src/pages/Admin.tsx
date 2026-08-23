@@ -214,6 +214,24 @@ const Admin = () => {
                           Reject
                         </Button>
                       )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={async () => {
+                          if (!confirm("Delete this review permanently?")) return;
+                          try {
+                            await adminCall({ action: "delete_review", review_id: review.id });
+                            toast.success("Review deleted");
+                            refresh();
+                          } catch (e) {
+                            toast.error(e instanceof Error ? e.message : "Failed");
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </Button>
+
                     </div>
                   </Card>
                 ))
