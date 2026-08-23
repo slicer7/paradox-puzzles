@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Menu, LogIn, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { CartButton } from "./CartButton";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import paradoxLogo from "@/assets/paradox-logo.webp";
 
 const NAV_LINKS = [
@@ -16,6 +17,9 @@ export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { session, isAdmin } = useAdminAuth();
+
+
 
   const goToSection = (anchor: string) => {
     setMenuOpen(false);
@@ -50,7 +54,23 @@ export const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1">
+          {isAdmin ? (
+            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex text-primary">
+              <Link to="/admin">
+                <Shield className="h-4 w-4 mr-1.5" />
+                Admin
+              </Link>
+            </Button>
+          ) : !session ? (
+            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex text-muted-foreground hover:text-primary">
+              <Link to="/admin/login">
+                <LogIn className="h-4 w-4 mr-1.5" />
+                Sign in
+              </Link>
+            </Button>
+          ) : null}
           <CartButton />
+
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button
@@ -84,6 +104,24 @@ export const Header = () => {
                 >
                   Contact
                 </a>
+                {isAdmin ? (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="font-body text-lg font-medium text-primary py-3 px-2 rounded-md hover:bg-secondary transition-colors"
+                  >
+                    Admin
+                  </Link>
+                ) : !session ? (
+                  <Link
+                    to="/admin/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="font-body text-lg font-medium text-muted-foreground hover:text-primary py-3 px-2 rounded-md hover:bg-secondary transition-colors"
+                  >
+                    Sign in
+                  </Link>
+                ) : null}
+
               </nav>
             </SheetContent>
           </Sheet>
