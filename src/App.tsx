@@ -28,6 +28,8 @@ const AppContent = () => {
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/review-action" element={<ReviewAction />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
