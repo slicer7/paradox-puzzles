@@ -84,6 +84,10 @@ const Admin = () => {
             <p className="font-body text-sm text-muted-foreground">{email}</p>
           </div>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate("/")}>
+              <Home className="w-4 h-4 mr-2" />
+              Home
+            </Button>
             <Button variant="outline" onClick={refresh} disabled={loading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
               Refresh
