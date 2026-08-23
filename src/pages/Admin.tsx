@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus } from "lucide-react";
+import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus, Home } from "lucide-react";
 
 const Admin = () => {
   const navigate = useNavigate();
