@@ -54,7 +54,23 @@ export const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1">
+          {isAdmin ? (
+            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex text-primary">
+              <Link to="/admin">
+                <Shield className="h-4 w-4 mr-1.5" />
+                Admin
+              </Link>
+            </Button>
+          ) : !session ? (
+            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex text-muted-foreground hover:text-primary">
+              <Link to="/admin/login">
+                <LogIn className="h-4 w-4 mr-1.5" />
+                Sign in
+              </Link>
+            </Button>
+          ) : null}
           <CartButton />
+
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button
