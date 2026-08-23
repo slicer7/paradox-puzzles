@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import Unsubscribe from "./pages/Unsubscribe";
 import ReviewAction from "./pages/ReviewAction";
 import CartPage from "./pages/CartPage";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 const queryClient = new QueryClient();
 
