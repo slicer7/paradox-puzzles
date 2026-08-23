@@ -104,6 +104,24 @@ export const Header = () => {
                 >
                   Contact
                 </a>
+                {isAdmin ? (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="font-body text-lg font-medium text-primary py-3 px-2 rounded-md hover:bg-secondary transition-colors"
+                  >
+                    Admin
+                  </Link>
+                ) : !session ? (
+                  <Link
+                    to="/admin/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="font-body text-lg font-medium text-muted-foreground hover:text-primary py-3 px-2 rounded-md hover:bg-secondary transition-colors"
+                  >
+                    Sign in
+                  </Link>
+                ) : null}
+
               </nav>
             </SheetContent>
           </Sheet>
