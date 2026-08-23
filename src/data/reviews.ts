@@ -18,7 +18,7 @@ export function useReviewsForProduct(handle: string) {
     let cancelled = false;
     setLoading(true);
     (supabase as any)
-    (supabase as any)
+
       .rpc("get_approved_reviews", { _product_handle: handle })
       .then(({ data, error }) => {
         if (cancelled) return;
