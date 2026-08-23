@@ -14,14 +14,15 @@ function json(data: unknown, status = 200): Response {
 let cachedToken: { value: string; expiresAt: number } | null = null
 
 async function getAccessToken(): Promise<string> {
-  const staticToken = Deno.env.get('SHOPIFY_ACCESS_TOKEN')
-  if (staticToken) return staticToken
-
   if (cachedToken && cachedToken.expiresAt > Date.now() + 60_000) return cachedToken.value
 
   const clientId = Deno.env.get('SHOPIFY_CLIENT_ID')
   const clientSecret = Deno.env.get('SHOPIFY_CLIENT_SECRET')
-  if (!clientId || !clientSecret) throw new Error('Shopify credentials not configured')
+  if (!clientId || !clientSecret) {
+    const staticToken = Deno.env.get('SHOPIFY_ACCESS_TOKEN')
+    if (staticToken) return staticToken
+    throw new Error('Shopify credentials not configured')
+  }
 
   const res = await fetch(`https://${SHOP_DOMAIN}/admin/oauth/access_token`, {
     method: 'POST',
