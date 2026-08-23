@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Menu, LogIn, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { CartButton } from "./CartButton";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import paradoxLogo from "@/assets/paradox-logo.webp";
 
 const NAV_LINKS = [
