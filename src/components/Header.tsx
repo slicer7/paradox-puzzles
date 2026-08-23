@@ -16,7 +16,8 @@ const NAV_LINKS = [
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const { session, isAdmin } = useAdminAuth();
+
 
   const goToSection = (anchor: string) => {
     setMenuOpen(false);
