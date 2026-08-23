@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import Unsubscribe from "./pages/Unsubscribe";
 import ReviewAction from "./pages/ReviewAction";
 import CartPage from "./pages/CartPage";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const AppContent = () => {
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/review-action" element={<ReviewAction />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
