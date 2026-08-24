@@ -81,20 +81,11 @@ Deno.serve(async (req) => {
 
   const admin = createClient(supabaseUrl, serviceKey)
 
-  // Role check, with first-user bootstrap when no admin exists yet.
+  // Role check. Admin roles are granted out-of-band (SQL migration) only —
+  // no self-service bootstrap from this publicly reachable endpoint.
   const { data: isAdminData } = await admin.rpc('has_role', { _user_id: user.id, _role: 'admin' })
-  let isAdmin = Boolean(isAdminData)
-  if (!isAdmin) {
-    const { count } = await admin
-      .from('user_roles')
-      .select('id', { count: 'exact', head: true })
-      .eq('role', 'admin')
-    if ((count ?? 0) === 0) {
-      const { error: insErr } = await admin.from('user_roles').insert({ user_id: user.id, role: 'admin' })
-      if (!insErr) isAdmin = true
-    }
-  }
-  if (!isAdmin) return json({ error: 'Not authorized' }, 403)
+  if (!isAdminData) return json({ error: 'Not authorized' }, 403)
+
 
   let payload: Record<string, any>
   try { payload = await req.json() } catch { return json({ error: 'Invalid JSON body' }, 400) }
