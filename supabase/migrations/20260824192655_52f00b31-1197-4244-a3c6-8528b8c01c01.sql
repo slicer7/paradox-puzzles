@@ -1,0 +1,1 @@
+GRANT SELECT (status) ON public.product_reviews TO anon, authenticated;
