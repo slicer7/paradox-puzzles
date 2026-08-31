@@ -101,13 +101,13 @@ async function publishToAllChannels(productId: number) {
   }
 
   // Fallback (no read_publications scope): publish via REST
-  await shopifyFetch(`products/${productId}.json`, {
+  await shopify(`products/${productId}.json`, {
     method: 'PUT',
     body: JSON.stringify({ product: { id: productId, status: 'active', published: true } }),
   })
   names.push('Online Store')
   try {
-    await shopifyFetch(`product_listings/${productId}.json`, {
+    await shopify(`product_listings/${productId}.json`, {
       method: 'PUT',
       body: JSON.stringify({ product_listing: { product_id: productId } }),
     })
