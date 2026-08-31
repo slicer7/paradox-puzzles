@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { getDifficulty, setDifficultyTag, difficultyLabel } from "@/lib/difficulty";
 import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus, Home } from "lucide-react";
 
 interface AdminUser {
@@ -453,6 +454,7 @@ const ProductEditor = ({
   const [title, setTitle] = useState(product.title);
   const [description, setDescription] = useState(product.body_html ?? "");
   const [price, setPrice] = useState(product.variants?.[0]?.price ?? "");
+  const [difficulty, setDifficulty] = useState<number | null>(getDifficulty(product.tags));
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -460,6 +462,7 @@ const ProductEditor = ({
     setTitle(product.title);
     setDescription(product.body_html ?? "");
     setPrice(product.variants?.[0]?.price ?? "");
+    setDifficulty(getDifficulty(product.tags));
   }, [product]);
 
   const reload = async () => {
@@ -473,7 +476,7 @@ const ProductEditor = ({
   const saveDetails = async () => {
     setSaving(true);
     try {
-      await adminCall({ action: "update_product", id: product.id, product: { title, description } });
+      await adminCall({ action: "update_product", id: product.id, product: { title, description, tags: setDifficultyTag(product.tags, difficulty) } });
       const variantId = product.variants?.[0]?.id;
       if (variantId && price) {
         await adminCall({ action: "update_variant", variant_id: variantId, price });
@@ -555,6 +558,32 @@ const ProductEditor = ({
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
+          </div>
+          <div className="space-y-2">
+            <Label>Difficulty rating</Label>
+            <div className="flex flex-wrap items-center gap-2">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <Button
+                  key={n}
+                  type="button"
+                  size="sm"
+                  variant={difficulty === n ? "default" : "outline"}
+                  onClick={() => setDifficulty(n)}
+                  className="font-body"
+                >
+                  {n} · {difficultyLabel(n)}
+                </Button>
+              ))}
+              <Button
+                type="button"
+                size="sm"
+                variant={difficulty === null ? "default" : "ghost"}
+                onClick={() => setDifficulty(null)}
+                className="font-body"
+              >
+                None
+              </Button>
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-desc">Description</Label>
