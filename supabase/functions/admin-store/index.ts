@@ -3,6 +3,8 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 
 const SHOP_DOMAIN = 'smepzx-ym.myshopify.com'
 const API_VERSION = '2025-07'
+const OWNER_EMAIL = 'lukeschlegel7@gmail.com'
+
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -81,11 +83,12 @@ Deno.serve(async (req) => {
 
   const admin = createClient(supabaseUrl, serviceKey)
 
-  // Role check. Admin roles are granted out-of-band (SQL migration) only —
+  // Role check. Admin roles are granted by the owner account (or in SQL) only —
   // no self-service bootstrap from this publicly reachable endpoint.
   const { data: isAdminData } = await admin.rpc('has_role', { _user_id: user.id, _role: 'admin' })
   if (!isAdminData) return json({ error: 'Not authorized' }, 403)
 
+  const isOwner = (user.email ?? '').toLowerCase() === OWNER_EMAIL
 
   let payload: Record<string, any>
   try { payload = await req.json() } catch { return json({ error: 'Invalid JSON body' }, 400) }
@@ -95,7 +98,54 @@ Deno.serve(async (req) => {
   try {
     switch (action) {
       case 'whoami':
-        return json({ email: user.email, isAdmin: true })
+        return json({ email: user.email, isAdmin: true, isOwner })
+
+      case 'list_admins': {
+        const { data: roles, error } = await admin
+          .from('user_roles')
+          .select('user_id, created_at')
+          .eq('role', 'admin')
+        if (error) return json({ error: error.message }, 500)
+        const { data: usersPage } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 })
+        const byId = new Map((usersPage?.users ?? []).map((u) => [u.id, u.email ?? '']))
+        const admins = (roles ?? []).map((r) => ({
+          user_id: r.user_id as string,
+          email: byId.get(r.user_id as string) ?? '(unknown)',
+          created_at: r.created_at as string,
+          is_owner: (byId.get(r.user_id as string) ?? '').toLowerCase() === OWNER_EMAIL,
+        }))
+        return json({ admins, isOwner })
+      }
+
+      case 'add_admin': {
+        if (!isOwner) return json({ error: 'Only the main admin can manage admins' }, 403)
+        const targetEmail = String(payload.email ?? '').trim().toLowerCase()
+        if (!targetEmail || !targetEmail.includes('@')) return json({ error: 'Enter a valid email' }, 400)
+        const { data: usersPage } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 })
+        const target = (usersPage?.users ?? []).find((u) => (u.email ?? '').toLowerCase() === targetEmail)
+        if (!target) {
+          return json({ error: 'No account with that email yet. Ask them to sign in once at /admin/login first.' }, 404)
+        }
+        const { error } = await admin
+          .from('user_roles')
+          .upsert({ user_id: target.id, role: 'admin' }, { onConflict: 'user_id,role' })
+        if (error) return json({ error: error.message }, 500)
+        return json({ success: true })
+      }
+
+      case 'remove_admin': {
+        if (!isOwner) return json({ error: 'Only the main admin can manage admins' }, 403)
+        const targetId = String(payload.user_id ?? '')
+        if (!targetId) return json({ error: 'Missing user id' }, 400)
+        const { data: targetUser } = await admin.auth.admin.getUserById(targetId)
+        if ((targetUser?.user?.email ?? '').toLowerCase() === OWNER_EMAIL) {
+          return json({ error: 'The main admin cannot be removed' }, 400)
+        }
+        const { error } = await admin.from('user_roles').delete().eq('user_id', targetId).eq('role', 'admin')
+        if (error) return json({ error: error.message }, 500)
+        return json({ success: true })
+      }
+
 
       case 'list_products': {
         const data = await shopify('products.json?limit=100')

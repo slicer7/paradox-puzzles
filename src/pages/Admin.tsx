@@ -13,6 +13,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus, Home } from "lucide-react";
 
+interface AdminUser {
+  user_id: string;
+  email: string;
+  created_at: string;
+  is_owner: boolean;
+}
+
 const Admin = () => {
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
@@ -20,9 +27,14 @@ const Admin = () => {
   const [authorized, setAuthorized] = useState(false);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [reviews, setReviews] = useState<AdminReview[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [isOwner, setIsOwner] = useState(false);
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [addingAdmin, setAddingAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState<AdminProduct | null>(null);
   const [creating, setCreating] = useState(false);
+
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
@@ -40,13 +52,17 @@ const Admin = () => {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const [p, r] = await Promise.all([
+      const [p, r, a] = await Promise.all([
         adminCall<{ products: AdminProduct[] }>({ action: "list_products" }),
         adminCall<{ reviews: AdminReview[] }>({ action: "list_reviews" }),
+        adminCall<{ admins: AdminUser[]; isOwner: boolean }>({ action: "list_admins" }),
       ]);
       setProducts(p.products);
       setReviews(r.reviews);
+      setAdmins(a.admins ?? []);
+      setIsOwner(!!a.isOwner);
       setAuthorized(true);
+
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Could not load data";
       if (msg.toLowerCase().includes("authoriz")) {
@@ -101,7 +117,7 @@ const Admin = () => {
 
         {!authorized && !loading ? (
           <Card className="p-8 text-center font-body text-muted-foreground">
-            This account isn't an admin yet. The first account to open this page becomes the admin.
+            This account isn't an admin. Ask the main admin to grant you access.
           </Card>
         ) : (
           <Tabs defaultValue="products">
@@ -115,7 +131,90 @@ const Admin = () => {
                   </Badge>
                 )}
               </TabsTrigger>
+              <TabsTrigger value="admins">Admins</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="admins" className="space-y-4">
+              {isOwner ? (
+                <Card className="p-4 space-y-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-admin">Add an admin</Label>
+                    <p className="font-body text-xs text-muted-foreground">
+                      They must sign in once at /admin/login first, then enter that email here.
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        id="new-admin"
+                        type="email"
+                        placeholder="person@example.com"
+                        value={newAdminEmail}
+                        onChange={(e) => setNewAdminEmail(e.target.value)}
+                      />
+                      <Button
+                        disabled={addingAdmin || !newAdminEmail}
+                        onClick={async () => {
+                          setAddingAdmin(true);
+                          try {
+                            await adminCall({ action: "add_admin", email: newAdminEmail });
+                            toast.success("Admin added");
+                            setNewAdminEmail("");
+                            refresh();
+                          } catch (e) {
+                            toast.error(e instanceof Error ? e.message : "Failed");
+                          } finally {
+                            setAddingAdmin(false);
+                          }
+                        }}
+                      >
+                        {addingAdmin && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ) : (
+                <Card className="p-4 font-body text-sm text-muted-foreground">
+                  Only the main admin can add or remove admins.
+                </Card>
+              )}
+
+              <div className="grid gap-3">
+                {admins.map((a) => (
+                  <Card key={a.user_id} className="p-4 flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="font-body text-sm truncate">{a.email}</p>
+                      <p className="font-body text-xs text-muted-foreground">
+                        Added {new Date(a.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    {a.is_owner ? (
+                      <Badge>Main admin</Badge>
+                    ) : (
+                      isOwner && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={async () => {
+                            if (!confirm(`Remove admin access for ${a.email}?`)) return;
+                            try {
+                              await adminCall({ action: "remove_admin", user_id: a.user_id });
+                              toast.success("Admin removed");
+                              refresh();
+                            } catch (e) {
+                              toast.error(e instanceof Error ? e.message : "Failed");
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Remove
+                        </Button>
+                      )
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
 
             <TabsContent value="products" className="space-y-4">
               <Button onClick={() => setCreating(true)} className="font-body font-semibold">
