@@ -3,6 +3,8 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 
 const SHOP_DOMAIN = 'smepzx-ym.myshopify.com'
 const API_VERSION = '2025-07'
+const OWNER_EMAIL = 'lukeschlegel7@gmail.com'
+
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
