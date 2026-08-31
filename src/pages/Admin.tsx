@@ -604,7 +604,20 @@ const ProductEditor = ({
             </div>
           </div>
 
-          <div className="pt-4 border-t border-border/60">
+          <div className="pt-4 border-t border-border/60 flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              onClick={async () => {
+                try {
+                  await adminCall({ action: "publish_product", id: product.id });
+                  toast.success("Published to all sales channels — it will appear on the site shortly");
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : "Could not publish");
+                }
+              }}
+            >
+              Publish to storefront
+            </Button>
             <Button
               variant="outline"
               className="text-destructive"
@@ -623,6 +636,7 @@ const ProductEditor = ({
               Delete product
             </Button>
           </div>
+
         </div>
       </DialogContent>
     </Dialog>

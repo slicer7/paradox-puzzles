@@ -64,6 +64,37 @@ async function shopify(path: string, init: RequestInit = {}) {
   return body as Record<string, any>
 }
 
+async function shopifyGraphql(query: string, variables: Record<string, unknown> = {}) {
+  const token = await getAccessToken()
+  const res = await fetch(`https://${SHOP_DOMAIN}/admin/api/${API_VERSION}/graphql.json`, {
+    method: 'POST',
+    headers: { 'X-Shopify-Access-Token': token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables }),
+  })
+  const text = await res.text()
+  if (!res.ok) throw new Error(`Shopify GraphQL ${res.status}: ${text.slice(0, 500)}`)
+  const body = JSON.parse(text)
+  if (body.errors) throw new Error(`Shopify GraphQL: ${JSON.stringify(body.errors).slice(0, 500)}`)
+  return body.data as Record<string, any>
+}
+
+// Publish a product to every sales channel (Online Store, Lovable/Headless, etc.)
+// so the Storefront API can return it.
+async function publishToAllChannels(productId: number) {
+  const data = await shopifyGraphql(`{ publications(first: 25) { edges { node { id name } } } }`)
+  const ids: string[] = (data?.publications?.edges ?? []).map((e: any) => e.node.id)
+  if (ids.length === 0) return []
+  const result = await shopifyGraphql(
+    `mutation Pub($id: ID!, $input: [PublicationInput!]!) {
+      publishablePublish(id: $id, input: $input) { userErrors { field message } }
+    }`,
+    { id: `gid://shopify/Product/${productId}`, input: ids.map((publicationId) => ({ publicationId })) },
+  )
+  const errs = result?.publishablePublish?.userErrors ?? []
+  if (errs.length) throw new Error(errs.map((e: any) => e.message).join(', '))
+  return (data?.publications?.edges ?? []).map((e: any) => e.node.name)
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
@@ -184,8 +215,23 @@ Deno.serve(async (req) => {
           },
         }
         const data = await shopify('products.json', { method: 'POST', body: JSON.stringify(body) })
-        return json({ product: data.product })
+        let publishWarning: string | null = null
+        try {
+          await publishToAllChannels(Number(data.product.id))
+        } catch (e) {
+          publishWarning = e instanceof Error ? e.message : 'Could not publish to sales channels'
+          console.error('publish failed', e)
+        }
+        return json({ product: data.product, publishWarning })
       }
+
+      case 'publish_product': {
+        const id = Number(payload.id)
+        if (!id) return json({ error: 'Missing product id' }, 400)
+        const channels = await publishToAllChannels(id)
+        return json({ success: true, channels })
+      }
+
 
       case 'update_product': {
         const id = Number(payload.id)
