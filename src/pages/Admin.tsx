@@ -13,6 +13,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, ArrowLeft, ArrowRight, Star, LogOut, RefreshCw, ImagePlus, Home } from "lucide-react";
 
+interface AdminUser {
+  user_id: string;
+  email: string;
+  created_at: string;
+  is_owner: boolean;
+}
+
 const Admin = () => {
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
@@ -20,9 +27,14 @@ const Admin = () => {
   const [authorized, setAuthorized] = useState(false);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [reviews, setReviews] = useState<AdminReview[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [isOwner, setIsOwner] = useState(false);
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [addingAdmin, setAddingAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState<AdminProduct | null>(null);
   const [creating, setCreating] = useState(false);
+
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
