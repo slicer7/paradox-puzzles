@@ -85,7 +85,7 @@ export async function storefrontApiRequest(query: string, variables: Record<stri
 
 const STOREFRONT_QUERY = `
   query GetProducts($first: Int!) {
-    products(first: $first) {
+    products(first: $first, sortKey: CREATED_AT, reverse: true) {
       edges {
         node {
           id
