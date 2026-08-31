@@ -7,6 +7,8 @@ import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { trackAddToCart } from "@/lib/fbq";
+import { ProductRating, DifficultyMeter } from "@/components/Rating";
+import { getDifficulty } from "@/lib/difficulty";
 
 interface ProductCardProps {
   product: ShopifyProduct;
@@ -21,6 +23,7 @@ export const ProductCard = ({ product, index }: ProductCardProps) => {
   const image = node.images.edges[0]?.node;
   const variant = node.variants.edges[0]?.node;
   const price = node.priceRange.minVariantPrice;
+  const difficulty = getDifficulty(node.tags);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -80,6 +83,9 @@ export const ProductCard = ({ product, index }: ProductCardProps) => {
             <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
               {node.title}
             </h3>
+
+            <ProductRating handle={node.handle} />
+            {difficulty && <DifficultyMeter value={difficulty} />}
 
             <p className="font-body text-sm text-muted-foreground line-clamp-2 leading-relaxed">
               {node.description || "A mysterious puzzle awaits..."}

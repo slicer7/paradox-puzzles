@@ -8,6 +8,8 @@ import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { trackAddToCart } from "@/lib/fbq";
+import { ProductRating, DifficultyMeter } from "@/components/Rating";
+import { getDifficulty } from "@/lib/difficulty";
 
 export const FeaturedProduct = () => {
   const addItem = useCartStore(state => state.addItem);
@@ -117,6 +119,12 @@ export const FeaturedProduct = () => {
                   <h3 className="font-display text-3xl md:text-4xl font-bold text-foreground group-hover:text-primary transition-colors">
                     {node.title}
                   </h3>
+                  <div className="mt-3 flex flex-col items-center md:items-start gap-2">
+                    <ProductRating handle={node.handle} />
+                    {getDifficulty(node.tags) && (
+                      <DifficultyMeter value={getDifficulty(node.tags)!} />
+                    )}
+                  </div>
                 </div>
 
                 <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed">
