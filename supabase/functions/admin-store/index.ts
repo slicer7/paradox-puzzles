@@ -81,19 +81,43 @@ async function shopifyGraphql(query: string, variables: Record<string, unknown> 
 // Publish a product to every sales channel (Online Store, Lovable/Headless, etc.)
 // so the Storefront API can return it.
 async function publishToAllChannels(productId: number) {
-  const data = await shopifyGraphql(`{ publications(first: 25) { edges { node { id name } } } }`)
-  const ids: string[] = (data?.publications?.edges ?? []).map((e: any) => e.node.id)
-  if (ids.length === 0) return []
-  const result = await shopifyGraphql(
-    `mutation Pub($id: ID!, $input: [PublicationInput!]!) {
-      publishablePublish(id: $id, input: $input) { userErrors { field message } }
-    }`,
-    { id: `gid://shopify/Product/${productId}`, input: ids.map((publicationId) => ({ publicationId })) },
-  )
-  const errs = result?.publishablePublish?.userErrors ?? []
-  if (errs.length) throw new Error(errs.map((e: any) => e.message).join(', '))
-  return (data?.publications?.edges ?? []).map((e: any) => e.node.name)
+  const names: string[] = []
+  try {
+    const data = await shopifyGraphql(`{ publications(first: 25) { edges { node { id name } } } }`)
+    const ids: string[] = (data?.publications?.edges ?? []).map((e: any) => e.node.id)
+    if (ids.length) {
+      const result = await shopifyGraphql(
+        `mutation Pub($id: ID!, $input: [PublicationInput!]!) {
+          publishablePublish(id: $id, input: $input) { userErrors { field message } }
+        }`,
+        { id: `gid://shopify/Product/${productId}`, input: ids.map((publicationId) => ({ publicationId })) },
+      )
+      const errs = result?.publishablePublish?.userErrors ?? []
+      if (errs.length) throw new Error(errs.map((e: any) => e.message).join(', '))
+      return (data?.publications?.edges ?? []).map((e: any) => e.node.name)
+    }
+  } catch (e) {
+    console.error('graphql publish unavailable, falling back to REST', e)
+  }
+
+  // Fallback (no read_publications scope): publish via REST
+  await shopifyFetch(`products/${productId}.json`, {
+    method: 'PUT',
+    body: JSON.stringify({ product: { id: productId, status: 'active', published: true } }),
+  })
+  names.push('Online Store')
+  try {
+    await shopifyFetch(`product_listings/${productId}.json`, {
+      method: 'PUT',
+      body: JSON.stringify({ product_listing: { product_id: productId } }),
+    })
+    names.push('App sales channel')
+  } catch (e) {
+    console.error('product_listings publish failed', e)
+  }
+  return names
 }
+
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
