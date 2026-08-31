@@ -52,13 +52,17 @@ const Admin = () => {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const [p, r] = await Promise.all([
+      const [p, r, a] = await Promise.all([
         adminCall<{ products: AdminProduct[] }>({ action: "list_products" }),
         adminCall<{ reviews: AdminReview[] }>({ action: "list_reviews" }),
+        adminCall<{ admins: AdminUser[]; isOwner: boolean }>({ action: "list_admins" }),
       ]);
       setProducts(p.products);
       setReviews(r.reviews);
+      setAdmins(a.admins ?? []);
+      setIsOwner(!!a.isOwner);
       setAuthorized(true);
+
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Could not load data";
       if (msg.toLowerCase().includes("authoriz")) {
