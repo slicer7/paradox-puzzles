@@ -29,6 +29,8 @@ import { useEffect, useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { trackAddToCart, trackViewContent } from "@/lib/fbq";
+import { ProductRating, DifficultyMeter } from "@/components/Rating";
+import { getDifficulty } from "@/lib/difficulty";
 
 const TRUST_POINTS = [
   { icon: Truck, label: "Ships in 3–5 business days · Free US shipping on every order" },
@@ -226,9 +228,16 @@ const ProductPage = () => {
                 <h1 className="font-display text-4xl md:text-5xl font-bold text-gradient-gold mb-3">
                   {product.title}
                 </h1>
+                <ProductRating handle={product.handle} size="md" className="mb-3" />
                 <p className="font-display text-3xl font-bold text-primary">
                   {formatPrice(price.amount, price.currencyCode)}
                 </p>
+                {getDifficulty(product.tags) && (
+                  <div className="mt-4 inline-flex items-center gap-3 rounded-lg border border-border/60 bg-card px-4 py-2">
+                    <span className="kicker text-xs">Difficulty</span>
+                    <DifficultyMeter value={getDifficulty(product.tags)!} />
+                  </div>
+                )}
               </div>
 
               <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed">

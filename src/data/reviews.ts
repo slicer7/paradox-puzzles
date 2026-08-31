@@ -50,3 +50,13 @@ export function getAverageRating(items: Review[]): number | null {
   if (items.length === 0) return null;
   return items.reduce((sum, r) => sum + r.rating, 0) / items.length;
 }
+
+/** Approved-review summary (average + count) for a product handle. */
+export function useProductRating(handle: string) {
+  const { reviews, loading } = useReviewsForProduct(handle);
+  return {
+    average: getAverageRating(reviews),
+    count: reviews.length,
+    loading,
+  };
+}
