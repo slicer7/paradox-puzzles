@@ -106,6 +106,7 @@ async function publishToAllChannels(productId: number) {
     body: JSON.stringify({ product: { id: productId, status: 'active', published: true } }),
   })
   names.push('Online Store')
+  let manualRequired = false
   try {
     await shopify(`product_listings/${productId}.json`, {
       method: 'PUT',
@@ -113,10 +114,17 @@ async function publishToAllChannels(productId: number) {
     })
     names.push('App sales channel')
   } catch (e) {
+    manualRequired = true
     console.error('product_listings publish failed', e)
+  }
+  if (manualRequired) {
+    throw new Error(
+      'Product set to active, but this app is not allowed to publish to sales channels. In Shopify admin open the product > Publishing, and check every sales channel (Online Store + the headless/custom app used by the site).',
+    )
   }
   return names
 }
+
 
 
 Deno.serve(async (req) => {
