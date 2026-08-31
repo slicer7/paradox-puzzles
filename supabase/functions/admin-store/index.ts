@@ -215,8 +215,23 @@ Deno.serve(async (req) => {
           },
         }
         const data = await shopify('products.json', { method: 'POST', body: JSON.stringify(body) })
-        return json({ product: data.product })
+        let publishWarning: string | null = null
+        try {
+          await publishToAllChannels(Number(data.product.id))
+        } catch (e) {
+          publishWarning = e instanceof Error ? e.message : 'Could not publish to sales channels'
+          console.error('publish failed', e)
+        }
+        return json({ product: data.product, publishWarning })
       }
+
+      case 'publish_product': {
+        const id = Number(payload.id)
+        if (!id) return json({ error: 'Missing product id' }, 400)
+        const channels = await publishToAllChannels(id)
+        return json({ success: true, channels })
+      }
+
 
       case 'update_product': {
         const id = Number(payload.id)
